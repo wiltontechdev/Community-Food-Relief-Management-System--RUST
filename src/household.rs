@@ -14,12 +14,6 @@ pub struct Householdstock {
 }
 
 #[derive(Debug)]
-pub enum Served {
-    Yes,
-    No,
-}
-
-#[derive(Debug)]
 pub struct HouseHold {
     pub id: String,
     pub name: String,
