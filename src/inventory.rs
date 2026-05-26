@@ -15,10 +15,6 @@ impl Inventory {
         self.stock.insert(foodname.to_uppercase(), qnt);
     }
 
-    pub fn update_stock(&mut self, foodname: &str, qnt: u32) {
-        self.stock.insert(foodname.to_uppercase(), qnt);
-    }
-
     pub fn check_stock(&self) {
         for (foodtype, qnty) in &self.stock {
             println!("{}: {}", foodtype, qnty);
