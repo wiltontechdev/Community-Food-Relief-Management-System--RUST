@@ -3,7 +3,7 @@ use crate::household::*;
 use super::inventory::Inventory;
 
 pub struct DistributionRecord {
-    households_alloc: Vec<Householdstock>,
+    pub households_alloc: Vec<Householdstock>,
 }
 
 impl DistributionRecord {
