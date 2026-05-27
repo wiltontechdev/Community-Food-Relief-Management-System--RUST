@@ -24,7 +24,7 @@ pub fn distribution_menu(
         println!("1. Distribute");
         println!("2. Check Available Houses");
         println!("3. View Previous Distributions");
-        println!("3. Exit distribution Menu");
+        println!("4. Exit distribution Menu");
         print!("Enter option: ");
         io::stdout().flush().unwrap(); // ensures prompt prints before input
 
@@ -35,11 +35,21 @@ pub fn distribution_menu(
         match input.trim() {
             "1" => distribute(distribution_record, houses, inventory),
             "2" => check_avilable_houses(houses),
-            "3" => {
+            "3" => check_records(distribution_record),
+            "4" => {
                 println!("Exiting Distribution Menu!");
                 break;
             }
             _ => println!("Invalid option, try again."),
+        }
+    }
+}
+
+fn check_records(distribution_record: &DistributionRecord) {
+    for house in distribution_record.get_records() {
+        println!("ID {}", &house.houseid);
+        for (foodname, qnt) in &house.stock {
+            println!("Foodname: {} Quantity: {}", foodname, qnt);
         }
     }
 }
@@ -50,7 +60,11 @@ fn check_avilable_houses(households: &HashMap<String, HouseHold>) {
     }
 }
 
-fn distribute(distribution_record: &mut DistributionRecord) {
+fn distribute(
+    distribution_record: &mut DistributionRecord,
+    houses: &HashMap<String, HouseHold>,
+    inventory: &mut Inventory
+) {
     let foodname = read_input("Enter the name of the stock: ");
     let hseid = read_input("Enter the house ID: ");
 
@@ -64,7 +78,14 @@ fn distribute(distribution_record: &mut DistributionRecord) {
         }
     };
 
-    distribution_record.distribute(&foodname, qnt, &hseid, inventory, houses)
+    match distribution_record.distribute(&foodname, qnt, &hseid, inventory, houses) {
+        Ok(()) => {
+            println!("Distribution Successful");
+        }
+        Err(e) => {
+            println!("{}", e);
+        }
+    }
 }
 
 //Inventory Menu
@@ -89,7 +110,7 @@ pub fn invetory_menu(inventory: &mut Inventory) {
             "2" => remove_stock(inventory),
             "3" => list_inventory(inventory),
             "4" => get_stock_details(inventory),
-            "6" => {
+            "5" => {
                 println!("Menu exited!");
                 break;
             }
@@ -155,17 +176,16 @@ pub fn household_menu(id_count: &mut u32, houses: &mut HashMap<String, HouseHold
 
         // read input
         let mut input = String::new();
-        let id = gen_id(id_count);
         io::stdin().read_line(&mut input).unwrap();
 
         match input.trim() {
             "1" => {
-                add_household(id, houses);
+                add_household(houses, id_count);
                 *id_count += 1;
             }
-            "2" => remove_household(&id, houses),
+            "2" => remove_household(houses),
             "3" => list_households(houses),
-            "4" => check_household_details(&id, houses),
+            "4" => check_household_details(houses),
             "6" => {
                 println!("Menu exited!");
                 break;
@@ -175,8 +195,9 @@ pub fn household_menu(id_count: &mut u32, houses: &mut HashMap<String, HouseHold
     }
 }
 
-fn check_household_details(id: &str, houses: &HashMap<String, HouseHold>) {
-    match houses.get(id) {
+fn check_household_details(houses: &HashMap<String, HouseHold>) {
+    let id = read_input("Enter the ID of the House: ");
+    match houses.get(&id) {
         Some(house) => {
             house.display();
         }
@@ -199,11 +220,13 @@ fn list_households(households: &HashMap<String, HouseHold>) {
     }
 }
 
-fn remove_household(id: &str, households: &mut HashMap<String, HouseHold>) {
-    households.remove(id);
+fn remove_household(households: &mut HashMap<String, HouseHold>) {
+    let id = read_input("Enter the ID of the House: ");
+    households.remove(&id);
 }
 
-fn add_household(id: String, households: &mut HashMap<String, HouseHold>) {
+fn add_household(households: &mut HashMap<String, HouseHold>, id_count: &mut u32) {
+    let id = gen_id(id_count);
     let name = read_input("Enter the house name: ");
     let village = read_input("Enter the village name; ");
     let no_members: u32 = loop {

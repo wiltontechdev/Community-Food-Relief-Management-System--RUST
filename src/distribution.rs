@@ -11,13 +11,16 @@ pub struct DistributionRecord {
 }
 
 impl DistributionRecord {
+    pub fn get_records(&self) -> &Vec<Householdstock> {
+        &self.households_alloc
+    }
     pub fn distribute(
         &mut self,
         foodname: &str,
         qnt: u32,
         hseid: &str,
         inventory: &mut Inventory,
-        houses: &[HouseHold]
+        houses: &HashMap<String, HouseHold>
     ) -> Result<(), String> {
         // Check if household exists
         if !self.check_household(hseid, houses) {
@@ -52,14 +55,11 @@ impl DistributionRecord {
         self.households_alloc.push(house_stock);
     }
 
-    fn check_household(&self, hseid: &str, households: &[HouseHold]) -> bool {
-        for house in households {
-            if house.id == hseid {
-                return true;
-            }
+    fn check_household(&self, hseid: &str, houses: &HashMap<String, HouseHold>) -> bool {
+        match houses.get(hseid) {
+            Some(household) => true,
+            None => false,
         }
-
-        false
     }
 
     fn check_stockalloc(&self, hseid: &str) -> bool {
