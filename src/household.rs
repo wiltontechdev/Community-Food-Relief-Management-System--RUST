@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 
+#[derive(PartialEq)]
 #[derive(Debug)]
 pub enum PriorityLevel {
     High,
@@ -11,6 +12,13 @@ pub enum PriorityLevel {
 pub struct Householdstock {
     pub houseid: String,
     pub stock: HashMap<String, u32>,
+    pub served: Served,
+}
+
+#[derive(Debug)]
+pub enum Served {
+    Yes,
+    No,
 }
 
 #[derive(Debug)]

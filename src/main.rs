@@ -1,6 +1,7 @@
 pub mod household;
 pub mod inventory;
 pub mod distribution;
+pub mod report;
 pub mod menus;
 
 use household::HouseHold;

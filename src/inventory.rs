@@ -1,4 +1,4 @@
-use std::{ collections::HashMap, fmt::format };
+use std::{ collections::HashMap };
 
 pub struct Inventory {
     stock: HashMap<String, u32>,

@@ -1,9 +1,5 @@
 use std::collections::HashMap;
-
-use crate::household::Householdstock;
-
-// distribution.rs
-use super::household::HouseHold;
+use crate::household::*;
 use super::inventory::Inventory;
 
 pub struct DistributionRecord {
@@ -50,6 +46,7 @@ impl DistributionRecord {
         let house_stock = Householdstock {
             houseid: hseid.to_string(),
             stock,
+            served: Served::Yes,
         };
 
         self.households_alloc.push(house_stock);

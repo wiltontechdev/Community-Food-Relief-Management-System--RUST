@@ -274,7 +274,7 @@ fn add_household(households: &mut HashMap<String, HouseHold>, id_count: &mut u32
     households.insert(key, household);
 }
 
-fn read_input(prompt: &str) -> String {
+pub fn read_input(prompt: &str) -> String {
     print!("{}", prompt);
     io::stdout().flush().unwrap();
 
